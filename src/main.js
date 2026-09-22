@@ -103,29 +103,17 @@ function initScrollAnimations() {
   });
 }
 
-// Play/pause background video based on Hero content visibility
+// Play/pause background video based on Active Navbar Section
 function initHeroVideoControl() {
-  const video = document.querySelector('video');
-  const heroSection = document.getElementById('hero-section');
-  
-  if (!video || !heroSection) return;
-
-  const observerOptions = {
-    root: null,
-    threshold: 0,
+  window.setHeroVideoPlaying = function (isPlaying) {
+    const video = document.querySelector('video');
+    if (!video) return;
+    if (isPlaying) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
   };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    });
-  }, observerOptions);
-
-  observer.observe(heroSection);
 }
 
 // Smooth scroll helper
@@ -209,6 +197,11 @@ function initNavbar() {
         }
       }
     });
+
+    // Control background video based on active section
+    if (typeof window.setHeroVideoPlaying === 'function') {
+      window.setHeroVideoPlaying(targetId === 'hero-section');
+    }
   }
 
   // Handle Scroll Depth & Navbar Appearance
