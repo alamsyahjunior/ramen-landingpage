@@ -1,0 +1,6 @@
+{
+  "name": "Joffi Ramen",
+  "description": "Authentic Japanese ramen bar and noodle house hero landing section.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

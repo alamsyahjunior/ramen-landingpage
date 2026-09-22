@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joffi Ramen</title>
+    <meta name="description" content="Authentic Japanese ramen bar and noodle house hero landing section." />
+    <meta property="og:title" content="Joffi Ramen" />
+    <meta property="og:description" content="Authentic Japanese ramen bar and noodle house hero landing section." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&family=Nanum+Brush+Script&family=Gaegu:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="/src/index.css" />
+  </head>
+  <body class="bg-black text-white antialiased selection:bg-[#DE9547] selection:text-black min-h-screen font-sans">
+    
+    <div class="min-h-screen bg-black text-white flex flex-col justify-between relative font-sans selection:bg-[#DE9547] selection:text-black">
+      
+      <!-- Global Fixed Navbar -->
+      <header class="fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 py-2.5 sm:py-4 bg-transparent shadow-none">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4 relative">
+          
+          <!-- Brand Logo -->
+          <div id="brand-logo" class="flex items-center flex-shrink-0 cursor-pointer">
+            <img
+              src="https://joffiramen.com/images/logo-joffi-white.png"
+              alt="Joffi Ramen Logo"
+              class="w-auto object-contain hover:opacity-90 transition-all duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] h-8 xs:h-8.5 md:h-10 lg:h-11"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <!-- Desktop Navigation Links -->
+          <nav id="main-navigation" aria-label="Main Navigation" class="hidden md:flex items-center gap-0.5 lg:gap-1.5 px-2.5 lg:px-3.5 py-1 lg:py-1.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-md shadow-lg transition-all duration-300">
+            <button id="nav-link-home" class="relative px-2.5 md:px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[11px] md:text-xs lg:text-[13px] font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap text-white bg-[#DE9547] shadow-[0_2px_12px_rgba(222,149,71,0.45)]">
+              <span>Home</span>
+            </button>
+            <button id="nav-link-about" class="relative px-2.5 md:px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[11px] md:text-xs lg:text-[13px] font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap text-[#D8D8D8] hover:text-white hover:bg-white/10">
+              <span>About</span>
+            </button>
+            <button id="nav-link-menu" class="relative px-2.5 md:px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[11px] md:text-xs lg:text-[13px] font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap text-[#D8D8D8] hover:text-white hover:bg-white/10">
+              <span>Menu</span>
+            </button>
+            <button id="nav-link-locations" class="relative px-2.5 md:px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[11px] md:text-xs lg:text-[13px] font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap text-[#D8D8D8] hover:text-white hover:bg-white/10">
+              <span>Locations</span>
+            </button>
+            <button id="nav-link-contact" class="relative px-2.5 md:px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[11px] md:text-xs lg:text-[13px] font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap text-[#D8D8D8] hover:text-white hover:bg-white/10">
+              <span>Contact</span>
+            </button>
+          </nav>
+
+          <!-- Right Action Container: Order Now & Hamburger -->
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <button id="nav-order-button" type="button" class="hidden md:inline-flex items-center justify-center bg-[#DE9547] hover:bg-[#E5A154] active:bg-[#C98338] text-[#1D1204] font-bold text-xs lg:text-[13px] tracking-wider uppercase rounded-full transition-all duration-300 shadow-sm cursor-pointer hover:shadow-[0_0_16px_rgba(222,149,71,0.45)] whitespace-nowrap leading-none px-4 lg:px-5 py-2.5">
+              <span>ORDER NOW</span>
+            </button>
+
+            <!-- Hamburger Button (Mobile Only) -->
+            <button id="mobile-menu-toggle" type="button" aria-expanded="false" aria-label="Open Menu" class="md:hidden flex items-center justify-center w-9 h-9 rounded-full border border-white/15 bg-black/60 text-white hover:bg-black/80 transition-all duration-300 cursor-pointer select-none active:scale-95">
+              <svg class="w-4 h-4 text-[#DE9547] pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Mobile Menu Selection Dropdown Container -->
+        <div id="mobile-menu-container" class="md:hidden absolute top-full left-4 right-4 mt-2 bg-[#0c0c0e]/95 backdrop-blur-xl border border-white/15 rounded-2xl p-2 shadow-[0_16px_40px_rgba(0,0,0,0.85)] flex flex-col gap-1 z-50 overflow-hidden opacity-0 -translate-y-2 pointer-events-none scale-98 transition-all duration-200">
+          <button id="mobile-nav-link-home" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer bg-[#DE9547] text-white shadow-[0_2px_12px_rgba(222,149,71,0.4)]">
+            <span>Home</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+          </button>
+          <button id="mobile-nav-link-about" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer text-[#D8D8D8] hover:bg-white/10 active:bg-white/15 hover:text-white">
+            <span>About</span>
+          </button>
+          <button id="mobile-nav-link-menu" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer text-[#D8D8D8] hover:bg-white/10 active:bg-white/15 hover:text-white">
+            <span>Menu</span>
+          </button>
+          <button id="mobile-nav-link-locations" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer text-[#D8D8D8] hover:bg-white/10 active:bg-white/15 hover:text-white">
+            <span>Locations</span>
+          </button>
+          <button id="mobile-nav-link-contact" class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer text-[#D8D8D8] hover:bg-white/10 active:bg-white/15 hover:text-white">
+            <span>Contact</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Sticky Video Background -->
+      <div aria-hidden="true" class="sticky top-0 w-full aspect-video lg:aspect-auto lg:h-screen z-0 overflow-hidden pointer-events-none bg-black">
+        <video autoPlay loop muted playsInline class="w-full h-full object-cover object-center">
+          <source src="https://res.cloudinary.com/okgwapjx/video/upload/v1789983279/Ramen_bowl_rotating_20260921113017.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        <!-- Shadow gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent pointer-events-none"></div>
+        <!-- Bottom subtle gradient -->
+        <div class="absolute bottom-0 inset-x-0 h-6 sm:h-12 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-10"></div>
+      </div>
+
+      <!-- Hero Section Content -->
+      <div class="-mt-[56.25vw] lg:-mt-[100vh] relative z-10 w-full pointer-events-auto">
+        <main class="w-full">
+          <section id="hero-section" class="relative w-full aspect-video lg:aspect-auto lg:min-h-screen flex flex-col justify-center px-4 sm:px-8 md:px-10 lg:px-14 select-none pointer-events-auto">
+            
+            <!-- SVG Brush Texture Filter -->
+            <svg class="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+              <defs>
+                <filter id="ink-roughness" x="-10%" y="-10%" width="120%" height="120%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+              </defs>
+            </svg>
+
+            <!-- Headline Container -->
+            <div class="max-w-[1400px] w-full mx-auto relative z-10 pt-7 xs:pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-2 sm:pb-6 md:pb-8 lg:pb-16">
+              <div class="max-w-xs sm:max-w-sm md:max-w-md lg:max-w-3xl">
+                
+                <!-- Main Headline - Calligraphic Brush Typography -->
+                <div id="hero-main-heading" class="font-brush text-[#E7DEC8] leading-[0.98] sm:leading-[1.02] lg:leading-[1.04] tracking-wide" style="filter: url(#ink-roughness)">
+                  <!-- Line 1: RAMEN -->
+                  <div class="animate-on-view transition-all duration-700 ease-out transform opacity-0 translate-y-6 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-8xl xl:text-[96px] font-bold text-[#E9DFC8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                    RAMEN
+                  </div>
+
+                  <!-- Line 2: HALAL -->
+                  <div class="animate-on-view transition-all duration-700 ease-out delay-100 transform opacity-0 translate-y-6 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-8xl xl:text-[96px] font-bold text-[#E9DFC8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mt-0.5 sm:mt-1 lg:mt-2">
+                    HALAL
+                  </div>
+
+                  <!-- Line 3: INDONESIA -->
+                  <div class="animate-on-view transition-all duration-700 ease-out delay-200 transform opacity-0 translate-y-6 font-korean-brush text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-7xl xl:text-[88px] font-bold text-[#E9DFC8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mt-0.5 sm:mt-1 lg:mt-2 whitespace-nowrap">
+                    INDONESIA
+                  </div>
+                </div>
+
+                <!-- Subtitle / Tagline -->
+                <div class="animate-on-view transition-all duration-700 ease-out delay-300 transform opacity-0 translate-y-6 mt-1 xs:mt-1.5 sm:mt-3 lg:mt-5">
+                  <p id="hero-tagline" class="font-mono-tag text-[8px] xs:text-[9.5px] sm:text-xs md:text-sm lg:text-[17px] tracking-[0.14em] sm:tracking-[0.18em] lg:tracking-[0.24em] uppercase text-[#B5AF9F] font-semibold leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                    UNREAL FLAVOR. REAL PRICE.
+                  </p>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="animate-on-view transition-all duration-700 ease-out delay-[400ms] transform opacity-0 scale-95 mt-2 xs:mt-2.5 sm:mt-5 lg:mt-10">
+                  <button id="hero-cta-menu" type="button" class="inline-flex items-center justify-center bg-[#DE9547] hover:bg-[#E5A154] active:bg-[#C98338] text-white font-bold text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-base tracking-[0.14em] sm:tracking-[0.16em] lg:tracking-[0.2em] uppercase px-4 xs:px-5 sm:px-7 md:px-9 lg:px-12 py-1 xs:py-1.5 sm:py-2 md:py-2.5 lg:py-4 rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(222,149,71,0.25)] hover:shadow-[0_6px_25px_rgba(222,149,71,0.45)] hover:scale-[1.03] cursor-pointer">
+                    <span>MENU</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- About Section -->
+      <section id="about-section" class="relative z-20 w-full flex flex-col justify-between text-[#1A1A1A] overflow-visible bg-[#F8EDDA]">
+        
+        <!-- Connector Gradient -->
+        <div aria-hidden="true" class="absolute -top-5 sm:-top-8 md:-top-10 inset-x-0 h-5 sm:h-8 md:h-10 bg-gradient-to-b from-transparent via-[#F8EDDA]/50 to-[#F8EDDA] pointer-events-none z-20"></div>
+
+        <!-- Botanical SVG Ornament -->
+        <div aria-hidden="true" class="absolute top-10 left-[22%] sm:left-[28%] md:left-[32%] w-48 sm:w-64 md:w-80 h-[480px] pointer-events-none opacity-[0.12] text-[#861719] select-none z-0">
+          <svg viewBox="0 0 200 450" fill="none" stroke="currentColor" class="w-full h-full">
+            <path d="M95,20 C105,70 80,110 100,160 C120,210 75,260 105,310 C130,350 85,400 95,440" stroke-width="1.6" stroke-linecap="round" />
+            <path d="M102,40 C85,90 115,130 92,180 C70,230 118,280 88,330 C65,370 105,410 98,440" stroke-width="1.2" stroke-dasharray="2 2" />
+            <circle cx="100" cy="50" r="14" stroke-width="1" />
+            <circle cx="100" cy="50" r="7" stroke-width="0.8" />
+            <path d="M100,36 C108,44 108,56 100,64 C92,56 92,44 100,36 Z" stroke-width="1" />
+            <path d="M86,50 C94,42 106,42 114,50 C106,58 94,58 86,50 Z" stroke-width="1" />
+            <path d="M96,90 C75,82 68,98 84,105 C96,108 97,94 96,90 Z" stroke-width="1" />
+            <path d="M102,125 C125,115 135,130 118,140 C104,146 102,130 102,125 Z" stroke-width="1" />
+            <g transform="translate(100, 210)">
+              <circle cx="0" cy="0" r="24" stroke-width="1.2" />
+              <circle cx="0" cy="0" r="16" stroke-width="0.8" />
+              <circle cx="0" cy="0" r="8" stroke-width="0.8" />
+              <path d="M0,-24 C14,-16 14,16 0,24 C-14,16 -14,-16 0,-24 Z" stroke-width="1" />
+              <path d="M-24,0 C-16,14 16,14 24,0 C16,-14 -16,-14 -24,0 Z" stroke-width="1" />
+              <path d="M-17,-17 C-3,-6 6,3 17,17 C3,6 -6,-3 -17,-17 Z" stroke-width="0.9" />
+              <path d="M17,-17 C6,-3 -3,6 -17,17 C-6,3 3,-6 17,-17 Z" stroke-width="0.9" />
+              <path d="M-18,-26 C-30,-38 -15,-48 -5,-40" stroke-width="0.9" />
+              <path d="M18,26 C30,38 15,48 5,40" stroke-width="0.9" />
+            </g>
+            <path d="M88,270 C65,262 55,278 72,288 C85,292 88,276 88,270 Z" stroke-width="1" />
+            <path d="M106,300 C130,290 140,305 122,318 C108,324 104,306 106,300 Z" stroke-width="1" />
+            <circle cx="92" cy="370" r="18" stroke-width="1" />
+            <circle cx="92" cy="370" r="9" stroke-width="0.8" />
+            <path d="M92,352 C102,362 102,378 92,388 C82,378 82,362 92,352 Z" stroke-width="0.9" />
+            <path d="M74,370 C84,360 100,360 110,370 C100,380 84,380 74,370 Z" stroke-width="0.9" />
+          </svg>
+        </div>
+
+        <!-- Upper Area Content Grid -->
+        <div class="relative z-10 max-w-[1400px] w-full mx-auto px-3 sm:px-10 lg:px-14 pt-10 sm:pt-24 md:pt-28 pb-4 sm:pb-8">
+          <div class="grid grid-cols-2 gap-3.5 sm:gap-10 lg:gap-16 items-start">
+            
+            <!-- Left Column -->
+            <div class="animate-on-view transition-all duration-700 ease-out transform opacity-0 translate-y-24 flex flex-col space-y-3 sm:space-y-6 max-w-lg">
+              <div class="flex items-center gap-1.5 sm:gap-3">
+                <span class="p-1 sm:p-2 rounded-full bg-[#861719]/10 text-[#861719] inline-flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </span>
+                <span class="font-mono-tag text-[9px] xs:text-[10px] sm:text-[13px] tracking-[0.16em] sm:tracking-[0.24em] uppercase text-[#861719] font-bold">
+                  CRAFT &amp; TRADITION
+                </span>
+              </div>
+
+              <h2 id="about-left-heading" class="font-brush text-2xl xs:text-3xl sm:text-5xl lg:text-7xl text-[#1E1714] leading-[1.06] tracking-normal">
+                SIMMERED SLOW, SERVED WITH PASSION.
+              </h2>
+
+              <p class="text-[#433D38] text-[10px] xs:text-[11px] sm:text-base lg:text-lg leading-relaxed font-medium font-sans">
+                Every bowl tells the story of time-honored techniques. Our signature broth is gently
+                simmered for over 18 hours with roasted marrow bones, hand-harvested kelp, and traditional
+                miso pastes, delivering an exquisite depth of pure, comforting umami.
+              </p>
+
+              <div class="flex items-center gap-3 sm:gap-6 pt-1 sm:pt-2">
+                <div class="flex flex-col">
+                  <span class="font-brush text-2xl xs:text-3xl sm:text-4xl lg:text-5xl text-[#861719] leading-none">18+</span>
+                  <span class="font-mono-tag text-[8px] xs:text-[9px] sm:text-xs tracking-wider text-[#685F58] uppercase mt-0.5 sm:mt-1">Hours Broth Craft</span>
+                </div>
+                <div class="w-[1px] h-6 sm:h-10 bg-[#861719]/20"></div>
+                <div class="flex flex-col">
+                  <span class="font-brush text-2xl xs:text-3xl sm:text-4xl lg:text-5xl text-[#861719] leading-none">100%</span>
+                  <span class="font-mono-tag text-[8px] xs:text-[9px] sm:text-xs tracking-wider text-[#685F58] uppercase mt-0.5 sm:mt-1">Handmade Noodles</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="animate-on-view transition-all duration-700 ease-out delay-150 transform opacity-0 translate-y-24 flex flex-col space-y-3 sm:space-y-6 max-w-lg md:pt-4">
+              <div class="flex items-center gap-1.5 sm:gap-3">
+                <span class="p-1 sm:p-2 rounded-full bg-[#DE9547]/15 text-[#DE9547] inline-flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                </span>
+                <span class="font-mono-tag text-[9px] xs:text-[10px] sm:text-[13px] tracking-[0.16em] sm:tracking-[0.24em] uppercase text-[#861719] font-bold">
+                  CULINARY MASTERY
+                </span>
+              </div>
+
+              <h3 id="about-right-heading" class="text-xs xs:text-sm sm:text-2xl lg:text-4xl font-bold text-[#1E1714] leading-tight tracking-tight font-sans">
+                Springy Hand-Pulled Wheat Noodles
+              </h3>
+
+              <p class="text-[#433D38] text-[10px] xs:text-[11px] sm:text-base lg:text-lg leading-relaxed font-medium font-sans">
+                Made fresh daily with selected organic wheat flour and precise kansui alkaline mineral
+                water. Each strand is crafted to cling harmoniously to the broth, topped with tender
+                char siu torched to caramelized perfection.
+              </p>
+
+              <div class="pt-2 sm:pt-4">
+                <button id="about-cta-explore-menu" type="button" class="inline-flex items-center justify-center gap-1.5 sm:gap-3 bg-[#861719] hover:bg-[#6E1214] active:bg-[#520C0E] text-[#F8EDDA] font-bold text-[9px] xs:text-[10px] sm:text-sm lg:text-base tracking-[0.12em] sm:tracking-[0.16em] uppercase px-3.5 xs:px-4 sm:px-9 py-2 xs:py-2.5 sm:py-4 rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(134,23,25,0.35)] hover:shadow-[0_6px_25px_rgba(134,23,25,0.5)] hover:scale-[1.02] cursor-pointer group whitespace-nowrap">
+                  <span>EXPLORE OUR MENU</span>
+                  <svg class="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Organic Wave Divider -->
+        <div class="relative w-full z-10 flex flex-col justify-end mt-0">
+          <div class="w-full overflow-hidden leading-none select-none pointer-events-none -mb-[1px]">
+            <svg class="relative block w-full h-[70px] sm:h-[95px] md:h-[120px] lg:h-[140px]" viewBox="0 0 1440 180" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0,75 C95,22 170,118 270,82 C370,46 440,148 540,118 C640,88 710,24 810,65 C910,106 970,162 1080,128 C1180,98 1280,30 1370,68 C1410,85 1430,95 1440,100 L1440,180 L0,180 Z" fill="#861719" />
+            </svg>
+          </div>
+          <div class="w-full h-8 sm:h-12 bg-[#861719]"></div>
+        </div>
+
+      </section>
+
+      <!-- Menu Section -->
+      <section id="menu" class="relative z-20 w-full bg-[#861719] text-[#F8EDDA] px-2.5 sm:px-8 lg:px-12 pt-0 sm:pt-2 pb-14 sm:pb-32 overflow-hidden scroll-mt-20 sm:scroll-mt-24">
+        <div class="max-w-[1400px] mx-auto flex flex-col items-center text-center">
+          
+          <!-- Section Header Centered -->
+          <div class="animate-on-view transition-all duration-700 ease-out transform opacity-0 translate-y-6 flex flex-col items-center space-y-2 sm:space-y-3 max-w-2xl mx-auto">
+            <h2 id="menu-heading" class="font-brush text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#F8EDDA] leading-[1.05] tracking-wide">
+              OUR MENU
+            </h2>
+          </div>
+
+          <!-- Centered Filter Buttons -->
+          <div class="animate-on-view transition-all duration-700 ease-out delay-150 transform opacity-0 translate-y-6 flex flex-wrap items-center justify-center gap-1.5 xs:gap-2 sm:gap-4 mt-5 sm:mt-10">
+            <button id="menu-btn-ramen" type="button" class="px-3.5 xs:px-5 sm:px-10 py-1.5 sm:py-3.5 rounded-full text-[10px] xs:text-xs sm:text-sm tracking-[0.14em] sm:tracking-[0.2em] font-bold uppercase transition-all duration-300 cursor-pointer bg-[#DE9547] text-[#1A1A1A] shadow-[0_4px_20px_rgba(222,149,71,0.4)] scale-[1.03]">
+              RAMEN
+            </button>
+            <button id="menu-btn-sides" type="button" class="px-3.5 xs:px-5 sm:px-10 py-1.5 sm:py-3.5 rounded-full text-[10px] xs:text-xs sm:text-sm tracking-[0.14em] sm:tracking-[0.2em] font-bold uppercase transition-all duration-300 cursor-pointer bg-[#6E1214]/80 hover:bg-[#6E1214] text-[#F8EDDA]/85 hover:text-[#F8EDDA] border border-[#F8EDDA]/20 hover:border-[#DE9547]/50">
+              SIDES
+            </button>
+            <button id="menu-btn-rice" type="button" class="px-3.5 xs:px-5 sm:px-10 py-1.5 sm:py-3.5 rounded-full text-[10px] xs:text-xs sm:text-sm tracking-[0.14em] sm:tracking-[0.2em] font-bold uppercase transition-all duration-300 cursor-pointer bg-[#6E1214]/80 hover:bg-[#6E1214] text-[#F8EDDA]/85 hover:text-[#F8EDDA] border border-[#F8EDDA]/20 hover:border-[#DE9547]/50">
+              RICE
+            </button>
+          </div>
+
+          <!-- Horizontal Gallery Sliders -->
+          <div class="relative w-full mt-6 sm:mt-14 max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12">
+            
+            <!-- Left Slider Arrow (Ramen is > 4 items) -->
+            <button id="menu-prev-button" type="button" aria-label="Previous Menu" class="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-6 h-6 xs:w-7 xs:h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/80 hover:bg-[#DE9547] text-[#F8EDDA] hover:text-[#1A1A1A] border border-white/20 hover:border-[#DE9547] shadow-[0_4px_16px_rgba(0,0,0,0.7)] backdrop-blur-md transition-all duration-300 cursor-pointer active:scale-95 opacity-25 pointer-events-none">
+              <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 -translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+
+            <!-- Right Slider Arrow (Ramen is > 4 items) -->
+            <button id="menu-next-button" type="button" aria-label="Next Menu" class="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-6 h-6 xs:w-7 xs:h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/80 hover:bg-[#DE9547] text-[#F8EDDA] hover:text-[#1A1A1A] border border-white/20 hover:border-[#DE9547] shadow-[0_4px_16px_rgba(0,0,0,0.7)] backdrop-blur-md transition-all duration-300 cursor-pointer active:scale-95 opacity-90 hover:opacity-100 hover:scale-105">
+              <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+
+            <!-- 1. RAMEN CAROUSEL CONTAINER -->
+            <div id="menu-carousel-ramen" class="flex items-stretch gap-2 xs:gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-1 snap-x snap-mandatory text-left">
+              
+              <!-- Card 1: RAMEN MALA -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-ramen-mala" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/ramen-mala-story-new.jpg" alt="RAMEN MALA" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">RAMEN MALA</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">The Spicy Sichuan Sensation.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: RAMEN MISO -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-ramen-miso" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/ramen-miso-story-new.jpg" alt="RAMEN MISO" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">RAMEN MISO</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Creamy & Rich Umami.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: RAMEN KARI -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-ramen-kari" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/ramen-kari-story-new.jpg" alt="RAMEN KARI" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">RAMEN KARI</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Bold Japanese Curry Flavor.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: SHOYU RAMEN -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-shoyu-ramen" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/shoyu-story-new.jpg" alt="SHOYU RAMEN" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">SHOYU RAMEN</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Classic Clear Broth</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 5: RAMEN DRY -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-ramen-dry" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/ramen-dry-story-new.jpg" alt="RAMEN DRY" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">RAMEN DRY</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">The Absolute Dry Experience</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 2. SIDES CAROUSEL CONTAINER (hidden initially) -->
+            <div id="menu-carousel-sides" class="hidden items-stretch gap-2 xs:gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-1 snap-x snap-mandatory text-left">
+              
+              <!-- Card 1: AGEMONO SERIES 1 -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-agemono-series-1" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/agemono-1-story-new.jpg" alt="AGEMONO SERIES 1" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">AGEMONO SERIES 1</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Crispy & Golden Brown</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: AGEMONO SERIES 2 -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-agemono-series-2" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/agemono-2-story-new.jpg" alt="AGEMONO SERIES 2" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">AGEMONO SERIES 2</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">More Crunch, More Joy</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: DIMSUM PLATER 1 -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-dimsum-plater-1" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/dimsum-1-story-new.jpg" alt="DIMSUM PLATER 1" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">DIMSUM PLATER 1</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Steam Perfection</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: DIMSUM PLATER 2 -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-dimsum-plater-2" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/dimsum-2-story-new.jpg" alt="DIMSUM PLATER 2" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">DIMSUM PLATER 2</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Varied Taste in One Steam</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 3. RICE CAROUSEL CONTAINER (hidden initially) -->
+            <div id="menu-carousel-rice" class="hidden items-stretch gap-2 xs:gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-1 snap-x snap-mandatory text-left">
+              
+              <!-- Card 1: CHICKEN RICE BOX -->
+              <div class="flex-shrink-0 w-[calc((100%-8px)/2)] xs:w-[calc((100%-12px)/2)] sm:w-[calc((100%-48px)/4)] lg:w-[calc((100%-60px)/4)] snap-start">
+                <div id="product-card-chicken-rice-box" class="group relative w-full aspect-[9/16] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden cursor-pointer shadow-[0_8px_25px_rgba(0,0,0,0.5)] border border-[#F8EDDA]/15 select-none bg-neutral-900">
+                  <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="https://joffiramen.com/menus/nasi-story-new.jpg" alt="CHICKEN RICE BOX" class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105" referrerPolicy="no-referrer" loading="lazy" />
+                  </div>
+                  <div class="absolute inset-0 w-full h-full pointer-events-none opacity-0 invisible transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible" style="background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.96) 100%)"></div>
+                  <div class="relative z-10 w-full h-full flex flex-col justify-end p-3 xs:p-4 sm:p-5 md:p-6 opacity-0 invisible translate-y-2 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                    <div class="flex flex-col space-y-1 sm:space-y-2">
+                      <div class="flex flex-col gap-0.5">
+                        <h3 class="font-brush text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-[#DE9547] leading-tight tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2">CHICKEN RICE BOX</h3>
+                      </div>
+                      <p class="text-[9px] xs:text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base text-[#F8EDDA]/95 line-clamp-3 sm:line-clamp-4 leading-snug font-sans drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Complete Meal for the Hungry</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Locations Section -->
+      <section id="locations" class="relative z-20 w-full bg-[#0d0d0d] text-[#F8EDDA] px-4 sm:px-10 lg:px-14 py-12 sm:py-24 border-t border-neutral-900">
+        <div class="max-w-[1400px] mx-auto">
+          <div class="flex flex-col md:grid md:grid-cols-12 gap-5 sm:gap-8 lg:gap-12 items-start">
+            
+            <!-- Sidebar search and list -->
+            <div class="w-full md:col-span-5 flex flex-col">
+              
+              <!-- Header -->
+              <div class="animate-on-view transition-all duration-500 ease-out transform opacity-0 translate-y-6 flex-shrink-0 space-y-2 sm:space-y-3">
+                <div class="flex items-center gap-1.5 sm:gap-2 text-[#DE9547]">
+                  <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                  <span class="font-mono-tag text-[9px] sm:text-xs tracking-[0.16em] sm:tracking-[0.22em] uppercase font-bold">
+                    STORE LOCATION
+                  </span>
+                </div>
+                <h2 class="font-brush text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[#F8EDDA] leading-[1.04] tracking-wide whitespace-nowrap">
+                  FIND YOUR BOWL
+                </h2>
+                <div class="w-14 sm:w-24 h-1 sm:h-1.5 bg-[#861719] rounded-full mt-1 sm:mt-2"></div>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="animate-on-view transition-all duration-500 ease-out delay-100 transform opacity-0 translate-y-6 flex-shrink-0 relative w-full mt-3 sm:mt-4 mb-2 sm:mb-3">
+                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none text-neutral-500">
+                  <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+                <input
+                  id="branch-search-input"
+                  type="text"
+                  placeholder="Cari kota / cabang..."
+                  class="w-full bg-[#181818] hover:bg-[#1f1f1f] focus:bg-[#1c1c1c] text-[#F8EDDA] placeholder-neutral-500 text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-9 sm:pl-12 pr-4 py-2.5 sm:py-3.5 border border-neutral-800 focus:border-[#DE9547] focus:outline-none transition-all shadow-inner"
+                />
+                <button type="button" class="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-xs text-neutral-400 hover:text-white hidden">
+                  Clear
+                </button>
+              </div>
+
+              <!-- Desktop Branch Sidebar Cards Container -->
+              <div class="animate-on-view transition-all duration-500 ease-out delay-200 transform opacity-0 translate-y-6 hidden md:flex flex-col space-y-2 sm:space-y-2.5 overflow-y-auto pr-1.5 custom-scrollbar h-[340px] lg:h-[480px]">
+                
+                <!-- Branch Card 1 -->
+                <div id="branch-card-jkt-senopati" class="branch-card px-3 py-2.5 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-neutral-800/80 hover:border-neutral-700 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer transition-all duration-300 w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="branch-card-icon p-1 rounded flex-shrink-0 bg-neutral-800 text-[#DE9547]">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      </span>
+                      <h3 class="branch-card-name font-bold text-sm sm:text-base leading-tight truncate text-[#F8EDDA]">
+                        Joffi Ramen - Senopati
+                      </h3>
+                    </div>
+                    <span class="branch-card-city text-[9px] sm:text-[10px] font-mono-tag font-semibold px-2 py-0.5 rounded-full bg-neutral-800/90 text-neutral-300 whitespace-nowrap flex-shrink-0">
+                      Jakarta Selatan
+                    </span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-1.5 leading-snug line-clamp-1">
+                    Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan 12190
+                  </p>
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 pt-2 border-t border-neutral-800/60 text-[10px] sm:text-[11px] text-neutral-400">
+                    <div class="flex items-center gap-1">
+                      <svg class="w-3 h-3 text-neutral-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <span class="branch-card-hours truncate">11:00 - 23:00 WIB</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Branch Card 2 -->
+                <div id="branch-card-bdg-riau" class="branch-card px-3 py-2.5 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-neutral-800/80 hover:border-neutral-700 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer transition-all duration-300 w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="branch-card-icon p-1 rounded flex-shrink-0 bg-neutral-800 text-[#DE9547]">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      </span>
+                      <h3 class="branch-card-name font-bold text-sm sm:text-base leading-tight truncate text-[#F8EDDA]">
+                        Joffi Ramen - Riau Bandung
+                      </h3>
+                    </div>
+                    <span class="branch-card-city text-[9px] sm:text-[10px] font-mono-tag font-semibold px-2 py-0.5 rounded-full bg-neutral-800/90 text-neutral-300 whitespace-nowrap flex-shrink-0">
+                      Bandung
+                    </span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-1.5 leading-snug line-clamp-1">
+                    Jl. L. L. R.E. Martadinata No. 85, Cihapit, Bandung 40114
+                  </p>
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 pt-2 border-t border-neutral-800/60 text-[10px] sm:text-[11px] text-neutral-400">
+                    <div class="flex items-center gap-1">
+                      <svg class="w-3 h-3 text-neutral-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <span class="branch-card-hours truncate">10:30 - 22:30 WIB</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Branch Card 3 -->
+                <div id="branch-card-cjr-pusat" class="branch-card px-3 py-2.5 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-neutral-800/80 hover:border-neutral-700 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer transition-all duration-300 w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="branch-card-icon p-1 rounded flex-shrink-0 bg-neutral-800 text-[#DE9547]">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      </span>
+                      <h3 class="branch-card-name font-bold text-sm sm:text-base leading-tight truncate text-[#F8EDDA]">
+                        Joffi Ramen - Cianjur Heritage
+                      </h3>
+                    </div>
+                    <span class="branch-card-city text-[9px] sm:text-[10px] font-mono-tag font-semibold px-2 py-0.5 rounded-full bg-neutral-800/90 text-neutral-300 whitespace-nowrap flex-shrink-0">
+                      Cianjur
+                    </span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-1.5 leading-snug line-clamp-1">
+                    Jl. Ir. H. Juanda No. 18, Pamoyanan, Cianjur 43211
+                  </p>
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 pt-2 border-t border-neutral-800/60 text-[10px] sm:text-[11px] text-neutral-400">
+                    <div class="flex items-center gap-1">
+                      <svg class="w-3 h-3 text-neutral-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <span class="branch-card-hours truncate">11:00 - 22:00 WIB</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Branch Card 4 -->
+                <div id="branch-card-sby-barat" class="branch-card px-3 py-2.5 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-neutral-800/80 hover:border-neutral-700 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer transition-all duration-300 w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="branch-card-icon p-1 rounded flex-shrink-0 bg-neutral-800 text-[#DE9547]">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      </span>
+                      <h3 class="branch-card-name font-bold text-sm sm:text-base leading-tight truncate text-[#F8EDDA]">
+                        Joffi Ramen - Graha Famili
+                      </h3>
+                    </div>
+                    <span class="branch-card-city text-[9px] sm:text-[10px] font-mono-tag font-semibold px-2 py-0.5 rounded-full bg-neutral-800/90 text-neutral-300 whitespace-nowrap flex-shrink-0">
+                      Surabaya
+                    </span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-1.5 leading-snug line-clamp-1">
+                    Ruko Plaza Graha Famili Blok D-05, Pradahkalikendal, Surabaya 60226
+                  </p>
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 pt-2 border-t border-neutral-800/60 text-[10px] sm:text-[11px] text-neutral-400">
+                    <div class="flex items-center gap-1">
+                      <svg class="w-3 h-3 text-neutral-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <span class="branch-card-hours truncate">11:00 - 23:00 WIB</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Branch Card 5 -->
+                <div id="branch-card-bali-canggu" class="branch-card px-3 py-2.5 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl border border-neutral-800/80 hover:border-neutral-700 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer transition-all duration-300 w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="branch-card-icon p-1 rounded flex-shrink-0 bg-neutral-800 text-[#DE9547]">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      </span>
+                      <h3 class="branch-card-name font-bold text-sm sm:text-base leading-tight truncate text-[#F8EDDA]">
+                        Joffi Ramen - Canggu Coastal
+                      </h3>
+                    </div>
+                    <span class="branch-card-city text-[9px] sm:text-[10px] font-mono-tag font-semibold px-2 py-0.5 rounded-full bg-neutral-800/90 text-neutral-300 whitespace-nowrap flex-shrink-0">
+                      Bali
+                    </span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-1.5 leading-snug line-clamp-1">
+                    Jl. Pantai Batu Bolong No. 68B, Canggu, Kuta Utara, Badung, Bali 80361
+                  </p>
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 pt-2 border-t border-neutral-800/60 text-[10px] sm:text-[11px] text-neutral-400">
+                    <div class="flex items-center gap-1">
+                      <svg class="w-3 h-3 text-neutral-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <span class="branch-card-hours truncate">12:00 - 24:00 WITA</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- No branches placeholder (hidden by default) -->
+                <div class="p-4 sm:p-6 text-center bg-[#151515] rounded-xl sm:rounded-2xl border border-dashed border-neutral-800 hidden">
+                  <p class="text-neutral-400 text-xs sm:text-sm font-medium">No locations found.</p>
+                  <p class="text-neutral-600 text-xs mt-0.5">Coba kata kunci lain</p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Interactive map -->
+            <div class="w-full md:col-span-7 flex flex-col">
+              
+              <!-- Map wrapper -->
+              <div class="animate-on-view transition-all duration-700 ease-out delay-150 transform opacity-0 translate-y-6 relative w-full h-[360px] xs:h-[400px] sm:h-[460px] md:h-[480px] lg:h-[620px] rounded-2xl sm:rounded-[24px] p-2 sm:p-3 border-2 border-dashed border-[#DE9547] shadow-[0_15px_45px_rgba(0,0,0,0.8)] bg-neutral-900/50">
+                
+                <!-- Map container -->
+                <div id="leaflet-map-container" class="w-full h-full rounded-xl sm:rounded-[18px] overflow-hidden z-0"></div>
+
+                <!-- Floating map badge -->
+                <div class="absolute top-3 sm:top-6 right-3 sm:right-6 z-[1000] bg-black/85 backdrop-blur-md border border-neutral-700/80 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold text-[#F8EDDA] shadow-lg flex items-center gap-1.5 pointer-events-none">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  <span class="hidden xs:inline font-sans">Live Interactive Map</span>
+                  <span class="xs:hidden font-sans">Map</span>
+                </div>
+              </div>
+
+              <!-- Map caption -->
+              <div class="px-2 pt-2.5 sm:pt-3 text-[10px] sm:text-[11px] text-neutral-500 font-sans">
+                <span class="hidden md:inline">* Klik pada kartu cabang atau pin peta untuk melihat rute &amp; info detail.</span>
+                <span class="md:hidden">* Ketuk pin mangkuk 🍜 pada peta atau cari kota/cabang di atas untuk melihat detail lokasi.</span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Section -->
+      <footer id="footer-section" class="relative z-20 w-full bg-gradient-to-b from-[#0f0f11] via-[#09090b] to-[#040405] text-[#F8EDDA] border-t border-[#861719]/40 overflow-hidden select-none">
+        
+        <!-- Japanese aesthetic decorations -->
+        <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#861719] to-transparent opacity-80"></div>
+        <div class="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-[#861719]/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-[#DE9547]/5 blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-14 pt-10 sm:pt-20 pb-8 sm:pb-12">
+          
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 lg:gap-12 pb-8 sm:pb-14 border-b border-white/[0.08]">
+            
+            <!-- KOLOM 1: BRAND IDENTITY & CERTIFICATE -->
+            <div class="md:col-span-5 flex flex-col space-y-3 sm:space-y-5">
+              <div class="flex items-center gap-3 sm:gap-4">
+                <img src="https://joffiramen.com/images/logo-joffi-white.png" alt="Joffi Ramen Indonesia" class="h-8 sm:h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]" referrerPolicy="no-referrer" />
+                <div class="h-6 sm:h-8 w-[1px] bg-white/15"></div>
+                <img src="https://joffiramen.com/images/halal-indonesia.png" alt="Sertifikasi Halal Indonesia" class="h-8 sm:h-12 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all" referrerPolicy="no-referrer" />
+              </div>
+
+              <p class="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed max-w-sm">
+                Menghadirkan kehangatan ramen otentik berpadu sentuhan khas Nusantara. 100% Halal dengan cita rasa premium dan harga bersahabat.
+              </p>
+
+              <!-- Social links -->
+              <div class="flex items-center gap-2.5 sm:gap-3 pt-1">
+                <!-- Instagram -->
+                <a id="social-instagram" href="https://www.instagram.com/joffiramen/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Joffi Ramen" class="group relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/[0.05] border border-white/10 text-neutral-400 hover:text-white hover:border-[#DE9547] hover:bg-[#DE9547]/15 hover:-translate-y-0.5 transition-all duration-300 shadow-sm">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                
+                <!-- TikTok -->
+                <a id="social-tiktok" href="https://www.tiktok.com/@joffiramen" target="_blank" rel="noopener noreferrer" aria-label="TikTok Joffi Ramen" class="group relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/[0.05] border border-white/10 text-neutral-400 hover:text-white hover:border-[#DE9547] hover:bg-[#DE9547]/15 hover:-translate-y-0.5 transition-all duration-300 shadow-sm">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current transition-transform group-hover:scale-110" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" /></svg>
+                </a>
+
+                <!-- YouTube -->
+                <a id="social-youtube" href="https://www.youtube.com/@joffiramen" target="_blank" rel="noopener noreferrer" aria-label="YouTube Joffi Ramen" class="group relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/[0.05] border border-white/10 text-neutral-400 hover:text-white hover:border-[#DE9547] hover:bg-[#DE9547]/15 hover:-translate-y-0.5 transition-all duration-300 shadow-sm">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- KOLOM 2: KONTAK & JAM BUKA -->
+            <div class="md:col-span-4 flex flex-col space-y-2.5 sm:space-y-4">
+              <h3 class="text-[10px] sm:text-xs font-mono-tag font-bold tracking-[0.16em] sm:tracking-[0.2em] text-[#DE9547] uppercase">
+                Kontak
+              </h3>
+              
+              <div class="flex flex-col space-y-2.5 sm:space-y-3.5 text-xs sm:text-sm text-neutral-400">
+                
+                <!-- Email -->
+                <a id="footer-contact-email" href="mailto:pusatjoffiramen@gmail.com" class="group flex items-center gap-2.5 hover:text-white transition-colors">
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.04] border border-white/5 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  </div>
+                  <span class="truncate font-sans">pusatjoffi@gmail.com</span>
+                </a>
+
+                <!-- Phone -->
+                <a id="footer-contact-phone" href="https://wa.me/6285888022445" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2.5 hover:text-white transition-colors">
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.04] border border-white/5 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  </div>
+                  <span class="truncate font-sans">0858-8802-2445</span>
+                </a>
+
+                <!-- Working Hours -->
+                <div class="flex items-center gap-2.5 text-neutral-400">
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.04] border border-white/5 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <div>
+                    <div class="text-[9px] sm:text-[10px] text-neutral-500 font-mono-tag uppercase">Jam Buka</div>
+                    <div class="text-white font-medium text-xs sm:text-sm font-sans">07:00 - 22:00 WIB</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- KOLOM 3: KANTOR PUSAT -->
+            <div class="md:col-span-3 flex flex-col space-y-2.5 sm:space-y-4">
+              <h3 class="text-[10px] sm:text-xs font-mono-tag font-bold tracking-[0.16em] sm:tracking-[0.2em] text-[#DE9547] uppercase">
+                Kantor Pusat
+              </h3>
+
+              <div class="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.04] border border-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#DE9547]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-neutral-200 font-sans">Headquarters</p>
+                  <p class="text-xs sm:text-sm text-neutral-400 mt-1 font-sans">
+                    Hive Parc 2 No 56, Tangerang, Banten
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom bar -->
+          <div class="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500 font-sans">
+            <p class="text-center sm:text-left">
+              &copy; 2026 Joffi Ramen Indonesia. All rights reserved.
+            </p>
+          </div>
+
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- Main Vanilla Application Logic -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
