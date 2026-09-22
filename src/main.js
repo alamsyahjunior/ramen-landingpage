@@ -375,6 +375,16 @@ function initMenuCarousel() {
     if (!container) return;
     const { scrollLeft, scrollWidth, clientWidth } = container;
     
+    // Dynamically show or hide the slider arrows based on actual content overflow/scrollability
+    const isScrollable = scrollWidth > clientWidth;
+    if (isScrollable) {
+      if (prevBtn) prevBtn.classList.remove('hidden');
+      if (nextBtn) nextBtn.classList.remove('hidden');
+    } else {
+      if (prevBtn) prevBtn.classList.add('hidden');
+      if (nextBtn) nextBtn.classList.add('hidden');
+    }
+
     const canScrollLeft = scrollLeft > 4;
     const canScrollRight = scrollLeft + clientWidth < scrollWidth - 4;
 
@@ -429,16 +439,6 @@ function initMenuCarousel() {
         }
       }
     });
-
-    // Toggle parent arrows container based on active items length
-    // RAMEN has 5 items (>4) -> show arrows. SIDES (4) & RICE (1) -> hide arrows.
-    if (tabName === 'RAMEN') {
-      if (prevBtn) prevBtn.classList.remove('hidden');
-      if (nextBtn) nextBtn.classList.remove('hidden');
-    } else {
-      if (prevBtn) prevBtn.classList.add('hidden');
-      if (nextBtn) nextBtn.classList.add('hidden');
-    }
   }
 
   function scrollCarousel(direction) {
