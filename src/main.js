@@ -103,6 +103,31 @@ function initScrollAnimations() {
   });
 }
 
+// Play/pause background video based on Hero content visibility
+function initHeroVideoControl() {
+  const video = document.querySelector('video');
+  const heroSection = document.getElementById('hero-section');
+  
+  if (!video || !heroSection) return;
+
+  const observerOptions = {
+    root: null,
+    threshold: 0,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, observerOptions);
+
+  observer.observe(heroSection);
+}
+
 // Smooth scroll helper
 
 function smoothSlideTo(target, offset = 0) {
@@ -769,6 +794,7 @@ function initStoreLocator() {
 
 document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
+  initHeroVideoControl();
   initNavbar();
   initMenuCarousel();
   initStoreLocator();
