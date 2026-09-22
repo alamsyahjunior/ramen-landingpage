@@ -68,29 +68,9 @@ const BRANCHES = [
 // Scroll animations with Intersection Observer
 
 function initScrollAnimations() {
-  const observerOptions = {
-    root: null,
-    rootMargin: '-60px',
-    threshold: 0.05,
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const el = entry.target;
-      if (entry.isIntersecting) {
-        el.classList.remove('opacity-0', 'translate-y-6', 'translate-y-24', 'scale-95');
-        el.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-      } else {
-        el.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-        el.classList.add('opacity-0');
-        const initialTransform = el.getAttribute('data-initial-transform');
-        if (initialTransform) {
-          el.classList.add(initialTransform);
-        }
-      }
-    });
-  }, observerOptions);
-
+  const sections = document.querySelectorAll('#hero-section, #about-section, #menu, #locations');
+  
+  // Store the initial transform class for all animated elements
   document.querySelectorAll('.animate-on-view').forEach((el) => {
     if (el.classList.contains('translate-y-6')) {
       el.setAttribute('data-initial-transform', 'translate-y-6');
@@ -99,7 +79,39 @@ function initScrollAnimations() {
     } else if (el.classList.contains('scale-95')) {
       el.setAttribute('data-initial-transform', 'scale-95');
     }
-    observer.observe(el);
+  });
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '100px 0px 100px 0px',
+    threshold: 0,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const section = entry.target;
+      const animatedElements = section.querySelectorAll('.animate-on-view');
+      
+      if (entry.isIntersecting) {
+        animatedElements.forEach((el) => {
+          el.classList.remove('opacity-0', 'translate-y-6', 'translate-y-24', 'scale-95');
+          el.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+        });
+      } else {
+        animatedElements.forEach((el) => {
+          el.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+          el.classList.add('opacity-0');
+          const initialTransform = el.getAttribute('data-initial-transform');
+          if (initialTransform) {
+            el.classList.add(initialTransform);
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => {
+    observer.observe(section);
   });
 }
 
