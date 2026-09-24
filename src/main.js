@@ -97,15 +97,7 @@ function initScrollAnimations() {
           el.classList.remove('opacity-0', 'translate-y-6', 'translate-y-24', 'scale-95');
           el.classList.add('opacity-100', 'translate-y-0', 'scale-100');
         });
-      } else {
-        animatedElements.forEach((el) => {
-          el.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-          el.classList.add('opacity-0');
-          const initialTransform = el.getAttribute('data-initial-transform');
-          if (initialTransform) {
-            el.classList.add(initialTransform);
-          }
-        });
+        observer.unobserve(section);
       }
     });
   }, observerOptions);
@@ -121,9 +113,13 @@ function initHeroVideoControl() {
     const video = document.querySelector('video');
     if (!video) return;
     if (isPlaying) {
-      video.play().catch(() => {});
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
     } else {
-      video.pause();
+      if (!video.paused) {
+        video.pause();
+      }
     }
   };
 }
@@ -175,9 +171,13 @@ function initNavbar() {
   let isScrollingProgrammatically = false;
   let scrollTimeout = null;
   let lastScrollY = window.scrollY;
+  let isNavbarScrolled = null;
+  let isFirstUpdate = true;
 
   // Function to update active link styling
   function updateActiveLink(targetId) {
+    if (activeSection === targetId && !isFirstUpdate) return;
+    isFirstUpdate = false;
     activeSection = targetId;
     navItems.forEach((item) => {
       const desktopBtn = document.getElementById(`nav-link-${item.name.toLowerCase()}`);
@@ -222,19 +222,22 @@ function initNavbar() {
 
     // Transition navbar background
     const isScrolled = scrollY > 30;
-    if (header) {
-      if (isScrolled) {
-        header.className = 'fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 py-2 sm:py-2.5 bg-black/80 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.5)]';
-      } else {
-        header.className = 'fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 py-2.5 sm:py-4 bg-transparent shadow-none';
+    if (isNavbarScrolled !== isScrolled) {
+      isNavbarScrolled = isScrolled;
+      if (header) {
+        if (isScrolled) {
+          header.className = 'fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 py-2 sm:py-2.5 bg-black/80 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.5)]';
+        } else {
+          header.className = 'fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 py-2.5 sm:py-4 bg-transparent shadow-none';
+        }
       }
-    }
 
-    if (logo) {
-      if (isScrolled) {
-        logo.className = 'w-auto object-contain hover:opacity-90 transition-all duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] h-7.5 xs:h-8 md:h-9';
-      } else {
-        logo.className = 'w-auto object-contain hover:opacity-90 transition-all duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] h-8 xs:h-8.5 md:h-10 lg:h-11';
+      if (logo) {
+        if (isScrolled) {
+          logo.className = 'w-auto object-contain hover:opacity-90 transition-all duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] h-7.5 xs:h-8 md:h-9';
+        } else {
+          logo.className = 'w-auto object-contain hover:opacity-90 transition-all duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] h-8 xs:h-8.5 md:h-10 lg:h-11';
+        }
       }
     }
 
@@ -345,7 +348,16 @@ function initNavbar() {
   }, { passive: true });
 
   // Attach navbar triggers
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
   mobileToggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     toggleMobileMenu();
@@ -802,5 +814,24 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroVideoControl();
   initNavbar();
   initMenuCarousel();
-  initStoreLocator();
+
+  // Lazy initialize map when near locations section
+  const locationsSection = document.getElementById('locations');
+  if (locationsSection) {
+    const mapObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          initStoreLocator();
+          observer.disconnect(); // Only initialize once!
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '400px 0px 400px 0px', // Pre-load map 400px before reaching Locations
+      threshold: 0
+    });
+    mapObserver.observe(locationsSection);
+  } else {
+    initStoreLocator(); // Fallback if element not found
+  }
 });
